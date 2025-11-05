@@ -1,11 +1,6 @@
-from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel, Field, validator
-from datetime import datetime
-from typing import List, Optional, Dict, Any
+from datetime import datetime, UTC
+from typing import List
 from uuid import UUID, uuid4
-import uvicorn
-from abc import ABC, abstractmethod
-
 from core_context.domain.events.abnormal_heart_rate_detected_event import AbnormalHeartRateDetectedEvent
 from core_context.domain.events.domain_event import DomainEvent
 from core_context.domain.events.heart_rate_recorded_event import HeartRateRecordedEvent
@@ -34,7 +29,7 @@ class HeartRateReading:
     def create(smart_band_id: int, pulse: int) -> 'HeartRateReading':
         """Factory method with business rules"""
         heart_rate_id = uuid4()
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(UTC)
         status = HeartRateReading._determine_status(pulse)
 
         reading = HeartRateReading(heart_rate_id, smart_band_id, pulse, timestamp, status)
